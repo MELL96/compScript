@@ -1,0 +1,121 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+.logo{
+  color: #dad7af;
+  font-size: 1.9rem;
+  padding-bottom: 5px;
+}
+
+a{
+  text-decoration: none;
+  color: #dad7af;  
+  font-size: 16px;
+  font-family: Helvetica, sans-serif;
+}
+
+a:hover {
+  color: #45a26f;
+}
+
+header{
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -o-flex;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 0;
+  width: 80%;
+  margin: 0 auto;
+}
+
+.nav-area{
+  list-style: none;
+}
+
+.nav-area li{
+  display: inline-block;
+  padding: 0 15px;
+}
+
+
+.view .row{
+  color: black;
+  height: 500px;
+}
+
+#entra, #sale{
+  color: gray;
+  font-size: 20px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  background-color:hsl(0, 0%, 1%);
+  text-align: center;
+  opacity: 0.7;  
+}
+
+.colu{
+  box-shadow:  0px 0px 10px 0px #00000045;
+}
+
+.view .row .colu{
+  margin-top: 10px;
+}
+
+.view{
+  margin:auto;
+  max-width: 80%;
+}
+
+.tables{    
+  font-size: 16px;
+  color: gray;
+  max-width: 70%;
+  margin: auto;
+  padding-top: 250px; 
+}
+
+.tables .table{
+  margin-bottom: 25px;
+  color: gray;
+}
+
+h2{    
+  text-align: center;
+}
+
+footer{
+  background-color: rgba(11, 12, 16, 1);
+  color: #dad7af;
+}
+
+.saveFile{
+  text-align: center;
+  width: 70%;
+  margin: 0 auto;
+  padding: 5px;    
+}
+
+.hide{
+  padding: 10px;
+}
+
+#but{
+  text-align: center;
+  width: 70%;
+  margin: 5px auto;
+  padding: 5px;
+}
+@media(max-width:600px){
+  .nav-area{
+      display: flex;
+      flex-direction: column;
+      
+  }
+}
