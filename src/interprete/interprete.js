@@ -92,7 +92,13 @@ break;
 case 3:
  this.$ = new Array(); this.$.push($$[$0]); 
 break;
-case 4: case 5: case 6: case 7: case 8: case 9: case 10: case 11: case 12: case 14: case 20: case 21: case 22: case 23: case 24: case 25: case 26: case 27: case 28: case 29: case 30: case 31: case 32: case 33: case 34: case 35: case 36: case 37: case 62:
+case 4: case 5: case 6: case 7: case 8: case 9:
+ this.$ = $$[$0]; 
+break;
+case 10: case 53:
+ this.$ = $$[$0-1]; 
+break;
+case 11: case 12: case 14: case 20: case 21: case 22: case 23: case 24: case 25: case 26: case 27: case 28: case 29: case 30: case 31: case 32: case 33: case 34: case 35: case 36: case 37:
  
 break;
 case 13:
@@ -158,9 +164,6 @@ break;
 case 52:
  this.$ = new logica.default($$[$0-1], '!', null, $$[$0-1].first_line, $$[$0-1].last_column, true); 
 break;
-case 53:
- this.$ = $$[$0-1]; 
-break;
 case 54:
  this.$ = new aritemtica.default($$[$0], 'UNARIO', null, $$[$0-1].first_line, $$[$0-1].last_column, true); 
 break;
@@ -178,6 +181,9 @@ case 60:
 break;
 case 61:
  this.$ = new identificador.default($$[$0], $$[$0].first_line, $$[$0].last_column); 
+break;
+case 62:
+ this.$ = new ternario.default($$[$0-4], $$[$0-2], $$[$0], _$[$0-4].first_line, _$[$0-4].last_column); 
 break;
 case 63:
  this.$ = new aritmetica.default(new identificador.default($$[$0-1], _$[$0-1].first_line, _$[$0-1].last_column), '+', new primitivo.default(1, $$[$0-1].first_line, $$[$0-1].last_column), $$[$0-1].first_line, $$[$0-1].last_column, false); 
@@ -443,6 +449,7 @@ _handle_error:
         const logica = require('../clases/expresiones/operaciones/Logica.ts')
         const relacional = require('../clases/expresiones/operaciones/Relacional.ts');
         const identificador = require('../clases/expresiones/Identificador.ts');
+        const ternario = require('../clases/expresiones/Ternario.ts');
 
         const ast = require('../clases/ast');
         const errores = require('../clases/ast/Errores.ts');

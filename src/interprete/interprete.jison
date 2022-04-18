@@ -169,6 +169,7 @@ caracter        (\'({escape2}|{aceptada2})\')
         const logica = require('../clases/expresiones/operaciones/Logica.ts')
         const relacional = require('../clases/expresiones/operaciones/Relacional.ts');
         const identificador = require('../clases/expresiones/Identificador.ts');
+        const ternario = require('../clases/expresiones/Ternario.ts');
 
         const ast = require('../clases/ast');
         const errores = require('../clases/ast/Errores.ts');
@@ -201,13 +202,13 @@ instrucciones   : instrucciones instruccion         { $$ = $1; $$.push($2); }
                 | instruccion                       { $$ = new Array(); $$.push($1); }
                 ;
 
-instruccion : declaracion                   { }
-            | asignacion                    { }
-            | print                         { }
-            | sent_if                       { }
-            | sent_while                    { }
-            | funciones                     { }
-            | llamada PYC                   { }
+instruccion : declaracion                   { $$ = $1; }
+            | asignacion                    { $$ = $1; }
+            | print                         { $$ = $1; }
+            | sent_if                       { $$ = $1; }
+            | sent_while                    { $$ = $1; }
+            | funciones                     { $$ = $1; }
+            | llamada PYC                   { $$ = $1; }
             | EJECUTAR llamada PYC          { }
             | BREAK PYC                     { }
             | error                         { new errores.default('Lexico', `No se esperaba el caracter ${yytext}`, this._$.first_line, this._$.first_column); }
@@ -290,8 +291,8 @@ e : e MAS e                         { $$ = new aritmetica.default($1, '+', $3, $
 
     | ID                            { $$ = new identificador.default($1, $1.first_line, $1.last_column); }
 
-    | e INTERROGACION e DSPNTS e    { } 
-    
+    | e INTERROGACION e DSPNTS e    { $$ = new ternario.default($1, $3, $5, @1.first_line, @1.last_column); } 
+
     | ID INCRE                      { $$ = new aritmetica.default(new identificador.default($1, @1.first_line, @1.last_column), '+', new primitivo.default(1, $1.first_line, $1.last_column), $1.first_line, $1.last_column, false); }
     | ID DECRE                      { $$ = new aritmetica.default(new identificador.default($1, @1.first_line, @1.last_column), '-', new primitivo.default(1, $1.first_line, $1.last_column), $1.first_line, $1.last_column, false); }
     ;
