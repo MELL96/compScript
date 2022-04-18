@@ -164,7 +164,10 @@ caracter        (\'({escape2}|{aceptada2})\')
 
 %{
         const aritmetica = require('../clases/expresiones/operaciones/Aritmetica.ts');
+        const logica = require('../clases/expresiones/operaciones/Logica.ts')
         const errores = require('../clases/ast/Errores.ts');
+        const primitivo = require('../clases/expresiones/Primitivo.ts');
+        const ast = require('../clases/ast');
 %}
 
 //-------------------------------------------------------------------> PRECEDENCIA DE OPERADORES
@@ -185,7 +188,7 @@ caracter        (\'({escape2}|{aceptada2})\')
 
 //-------------------------------------------------------------------> GRAMATICA
 
-inicio  : instrucciones EOF         { }
+inicio  : instrucciones EOF         { console.log($1); $$ = new ast.default($1); return $$; }
         ;
 
 instrucciones   : instrucciones instruccion         { $$ = $1; $$.push($2); }
@@ -196,7 +199,7 @@ instruccion : declaracion                   { }
             | asignacion                    { }
             | print                         { }
             | sent_if                       { }
-            | sent_while                    { } 
+            | sent_while                    { }
             | funciones                     { }
             | llamada PYC                   { }
             | EJECUTAR llamada PYC          { }
@@ -250,12 +253,12 @@ lista_exp   : lista_exp COMA e          { }
 print : PRINT PARA e PARC PYC           { }
     ; 
     
-e : e MAS e                         { $$ = new aritmetica.default($1, '+', $3, $1.frist_line, $1.last_column, false); }
-    | e MENOS e                     { $$ = new aritmetica.default($1, '-', $3, $1.frist_line, $1.last_column, false); }
-    | e MULTI e                     { $$ = new aritmetica.default($1, '*', $3, $1.frist_line, $1.last_column, false); }
-    | e DIV e                       { $$ = new aritmetica.default($1, '/', $3, $1.frist_line, $1.last_column, false); }
-    | e POTEN e                     { $$ = new aritmetica.default($1, '^', $3, $1.frist_line, $1.last_column, false); }
-    | e MODULO e                    { $$ = new aritmetica.default($1, '%', $3, $1.frist_line, $1.last_column, false); }
+e : e MAS e                         { $$ = new aritmetica.default($1, '+', $3, $1.first_line, $1.last_column, false); }
+    | e MENOS e                     { $$ = new aritmetica.default($1, '-', $3, $1.first_line, $1.last_column, false); }
+    | e MULTI e                     { $$ = new aritmetica.default($1, '*', $3, $1.first_line, $1.last_column, false); }
+    | e DIV e                       { $$ = new aritmetica.default($1, '/', $3, $1.first_line, $1.last_column, false); }
+    | e POTEN e                     { $$ = new aritmetica.default($1, '^', $3, $1.first_line, $1.last_column, false); }
+    | e MODULO e                    { $$ = new aritmetica.default($1, '%', $3, $1.first_line, $1.last_column, false); }
     
     | e IGUALIGUAL e                { }
     | e NOIGUAL e                   { }
@@ -264,20 +267,20 @@ e : e MAS e                         { $$ = new aritmetica.default($1, '+', $3, $
     | e MAYORIGUAL e                { }
     | e MAYORQUE e                  { }
 
-    | e OR e                        { }
-    | e AND e                       { }
-    | NOT e                         { }
+    | e OR e                        { $$ = new logica.default($1, '||', $3, $1.first_line, $1.last_column, false); }
+    | e AND e                       { $$ = new logica.default($1, '&&', $3, $1.first_line, $1.last_column, false); }
+    | NOT e                         { $$ = new logica.default($1, '!', null, $1.first_line, $1.last_column, true); }
 
-    | PARA e PARC                   { }
+    | PARA e PARC                   { $$ = $2; }
 
-    | MENOS e %prec UNARIO          { $$ = new aritemtica.default($2, 'UNARIO', null, $1.frist_line, $1.last_column, true); }
+    | MENOS e %prec UNARIO          { $$ = new aritemtica.default($2, 'UNARIO', null, $1.first_line, $1.last_column, true); }
 
-    | ENTERO                        { }
-    | DECIMAL                       { }
-    | CADENA                        { }
-    | CHAR                          { }
-    | TRUE                          { }
-    | FALSE                         { }
+    | ENTERO                        { $$ = new primitivo.default(Number(yytext), $1.first_line, $1.last_column); }
+    | DECIMAL                       { $$ = new primitivo.default(Number(yytext), $1.first_line, $1.last_column); }
+    | CADENA                        { $$ = new primitivo.default($1.slice(1, $1.length-1), $1.first_line, $1.last_column); }
+    | CHAR                          { $$ = new primitivo.default($1.slice(1, $1.length-1), $1.first_line, $1.last_column); }
+    | TRUE                          { $$ = new primitivo.default(true, $1.first_line, $1.last_column); }
+    | FALSE                         { $$ = new primitivo.default(false, $1.first_line, $1.last_column); }
 
     | ID                            { }
 
