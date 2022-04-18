@@ -163,11 +163,17 @@ caracter        (\'({escape2}|{aceptada2})\')
 //-------------------------------------------------------------------> AREA DE IMPORTS
 
 %{
+        const primitivo = require('../clases/expresiones/Primitivo.ts');
+
         const aritmetica = require('../clases/expresiones/operaciones/Aritmetica.ts');
         const logica = require('../clases/expresiones/operaciones/Logica.ts')
-        const errores = require('../clases/ast/Errores.ts');
-        const primitivo = require('../clases/expresiones/Primitivo.ts');
+        const relacional = require('../clases/expresiones/operaciones/Relacional.ts');
+        const identificador = require('../clases/expresiones/Identificador.ts');
+
         const ast = require('../clases/ast');
+        const errores = require('../clases/ast/Errores.ts');
+
+        const tipo = require('../clases/tablaSimbolos/Tipo.ts');
 %}
 
 //-------------------------------------------------------------------> PRECEDENCIA DE OPERADORES
@@ -210,11 +216,11 @@ instruccion : declaracion                   { }
 declaracion : tipo lista_simbolos PYC           { }
             ;   
 
-tipo    : INT               { }
-        | DOUBLE            { }
-        | STRING            { }
-        | CHAR1             { }
-        | BOOLEAN           { }
+tipo    : INT               { $$ = new tipo.default('ENTERO'); }
+        | DOUBLE            { $$ = new tipo.default('DOBLE'); }
+        | STRING            { $$ = new tipo.default('STRING'); }
+        | CHAR1             { $$ = new tipo.default('CHAR'); }
+        | BOOLEAN           { $$ = new tipo.default('BOOLEAN'); }
         ;
 
 lista_simbolos  : lista_simbolos COMA ID                    { }
@@ -260,12 +266,12 @@ e : e MAS e                         { $$ = new aritmetica.default($1, '+', $3, $
     | e POTEN e                     { $$ = new aritmetica.default($1, '^', $3, $1.first_line, $1.last_column, false); }
     | e MODULO e                    { $$ = new aritmetica.default($1, '%', $3, $1.first_line, $1.last_column, false); }
     
-    | e IGUALIGUAL e                { }
-    | e NOIGUAL e                   { }
-    | e MENORIGUAL e                { }
-    | e MENORQUE e                  { } 
-    | e MAYORIGUAL e                { }
-    | e MAYORQUE e                  { }
+    | e IGUALIGUAL e                { $$ = new relacional.default($1, '==', $3, $1.first_line, $1.last_column, false); }
+    | e NOIGUAL e                   { $$ = new relacional.default($1, '!=', $3, $1.first_line, $1.last_column, false); }
+    | e MENORIGUAL e                { $$ = new relacional.default($1, '<=', $3, $1.first_line, $1.last_column, false); }
+    | e MENORQUE e                  { $$ = new relacional.default($1, '<', $3, $1.first_line, $1.last_column, false); } 
+    | e MAYORIGUAL e                { $$ = new relacional.default($1, '>=', $3, $1.first_line, $1.last_column, false); }
+    | e MAYORQUE e                  { $$ = new relacional.default($1, '>', $3, $1.first_line, $1.last_column, false); }
 
     | e OR e                        { $$ = new logica.default($1, '||', $3, $1.first_line, $1.last_column, false); }
     | e AND e                       { $$ = new logica.default($1, '&&', $3, $1.first_line, $1.last_column, false); }
@@ -282,10 +288,10 @@ e : e MAS e                         { $$ = new aritmetica.default($1, '+', $3, $
     | TRUE                          { $$ = new primitivo.default(true, $1.first_line, $1.last_column); }
     | FALSE                         { $$ = new primitivo.default(false, $1.first_line, $1.last_column); }
 
-    | ID                            { }
+    | ID                            { $$ = new identificador.default($1, $1.first_line, $1.last_column); }
 
     | e INTERROGACION e DSPNTS e    { } 
     
-    | ID INCRE                      { }
-    | ID DECRE                      { }
+    | ID INCRE                      { $$ = new aritmetica.default(new identificador.default($1, @1.first_line, @1.last_column), '+', new primitivo.default(1, $1.first_line, $1.last_column), $1.first_line, $1.last_column, false); }
+    | ID DECRE                      { $$ = new aritmetica.default(new identificador.default($1, @1.first_line, @1.last_column), '-', new primitivo.default(1, $1.first_line, $1.last_column), $1.first_line, $1.last_column, false); }
     ;
