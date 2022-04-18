@@ -163,7 +163,8 @@ caracter        (\'({escape2}|{aceptada2})\')
 //-------------------------------------------------------------------> AREA DE IMPORTS
 
 %{
-
+        const aritmetica = require('../clases/expresiones/operaciones/Aritmetica.ts');
+        const errores = require('../clases/ast/Errores.ts');
 %}
 
 //-------------------------------------------------------------------> PRECEDENCIA DE OPERADORES
@@ -187,8 +188,8 @@ caracter        (\'({escape2}|{aceptada2})\')
 inicio  : instrucciones EOF         { }
         ;
 
-instrucciones   : instrucciones instruccion         { }
-                | instruccion                       { }
+instrucciones   : instrucciones instruccion         { $$ = $1; $$.push($2); }
+                | instruccion                       { $$ = new Array(); $$.push($1); }
                 ;
 
 instruccion : declaracion                   { }
@@ -200,7 +201,7 @@ instruccion : declaracion                   { }
             | llamada PYC                   { }
             | EJECUTAR llamada PYC          { }
             | BREAK PYC                     { }
-            | error                         { }
+            | error                         { new errores.default('Lexico', `No se esperaba el caracter ${yytext}`, this._$.first_line, this._$.first_column); }
             ;
 
 declaracion : tipo lista_simbolos PYC           { }
@@ -249,12 +250,12 @@ lista_exp   : lista_exp COMA e          { }
 print : PRINT PARA e PARC PYC           { }
     ; 
     
-e : e MAS e                         { }
-    | e MENOS e                     { }
-    | e MULTI e                     { }
-    | e DIV e                       { }
-    | e POTEN e                     { }
-    | e MODULO e                    { }
+e : e MAS e                         { $$ = new aritmetica.default($1, '+', $3, $1.frist_line, $1.last_column, false); }
+    | e MENOS e                     { $$ = new aritmetica.default($1, '-', $3, $1.frist_line, $1.last_column, false); }
+    | e MULTI e                     { $$ = new aritmetica.default($1, '*', $3, $1.frist_line, $1.last_column, false); }
+    | e DIV e                       { $$ = new aritmetica.default($1, '/', $3, $1.frist_line, $1.last_column, false); }
+    | e POTEN e                     { $$ = new aritmetica.default($1, '^', $3, $1.frist_line, $1.last_column, false); }
+    | e MODULO e                    { $$ = new aritmetica.default($1, '%', $3, $1.frist_line, $1.last_column, false); }
     
     | e IGUALIGUAL e                { }
     | e NOIGUAL e                   { }
@@ -269,7 +270,7 @@ e : e MAS e                         { }
 
     | PARA e PARC                   { }
 
-    | MENOS e %prec UNARIO          { }
+    | MENOS e %prec UNARIO          { $$ = new aritemtica.default($2, 'UNARIO', null, $1.frist_line, $1.last_column, true); }
 
     | ENTERO                        { }
     | DECIMAL                       { }
