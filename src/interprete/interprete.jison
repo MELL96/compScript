@@ -174,9 +174,13 @@ caracter        (\'({escape2}|{aceptada2})\')
         const errores = require('../clases/ast/Errores.ts');
 
         const tipo = require('../clases/tablaSimbolos/Tipo.ts');
+        const simbolo = require('../clases/tablaSimbolos/Simbolos.ts');
 
         const declaracion = require('../clases/instrucciones/Declaracion.ts');
         const asignacion = require('../clases/instrucciones/Asignacion.ts');
+        const print = require('../clases/instrucciones/Print.ts');
+        const breaks = require('../clases/instrucciones/sentenciaTransferencia/Breaks.ts');
+        const funcion = require('../clases/instrucciones/Funcion.ts');
 %}
 
 //-------------------------------------------------------------------> PRECEDENCIA DE OPERADORES
@@ -211,8 +215,8 @@ instruccion : declaracion               { $$ = $1; }
             | sent_while                { $$ = $1; }
             | funciones                 { $$ = $1; }
             | llamada PYC               { $$ = $1; }
-            | RUN llamada PYC           { }
-            | BREAK PYC                 { }
+            | RUN llamada PYC           { $$ = new runs.default($2, $1.first_line, $1.last_column); }
+            | BREAK PYC                 { $$ = new breaks.default(); }
             | CONTINUE PYC              { }                      
             | error                     { new errores.default('Lexico', `No se esperaba el caracter ${yytext}`, this._$.first_line, this._$.first_column); }
             ;
@@ -244,24 +248,24 @@ sent_if : IF PARA e PARC LLAVA instrucciones LLAVC                              
 sent_while  : WHILE PARA e PARC LLAVA instrucciones LLAVC           { }
             ; 
 
-funciones   : VOID ID PARA PARC LLAVA instrucciones LLAVC                           { }
-            | VOID ID PARA lista_parametros PARC LLAVA instrucciones LLAVC          { }  
+funciones   : VOID ID PARA PARC LLAVA instrucciones LLAVC                           { $$ = new funcion.default(3, new tipo.default('VOID'), $2, [], true, $6, $1.first_line, $1.last_column); }
+            | VOID ID PARA lista_parametros PARC LLAVA instrucciones LLAVC          { $$ = new funcion.default(3, new tipo.default('VOID'), $2, $4, true, $7, $1.first_line, $1.last_column); }  
             ;
 
-lista_parametros    : lista_parametros COMA tipo ID         { }
-                    | tipo ID                               { }
+lista_parametros    : lista_parametros COMA tipo ID         { $$ = $1; $$.push(new simbolo.default(6, $3, $4, null)); }
+                    | tipo ID                               { $$ = new Array(); $$.push(new simbolo.default(6, $1, $2, null)); }
                     ;
 
-llamada : ID PARA PARC                      { }
-        | ID PARA lista_exp PARC            { }
+llamada : ID PARA PARC                      { $$ = new llamada.default($1, [], $1.first_line, $1.last_column); }
+        | ID PARA lista_exp PARC            { $$ = new llamada.default($1, $3, $1.first_line, $1.last_column); }
         ;
 
-lista_exp   : lista_exp COMA e          { }
-            | e                         { }
+lista_exp   : lista_exp COMA e          { $$ = $1; $$.push($3); }
+            | e                         { $$ = new Array(); $$.push($1); }
             ;
 
-print : PRINT PARA e PARC PYC           { }
-    ; 
+print   : PRINT PARA e PARC PYC           { $$ = new print.default($3, $1.first_line, $1.last_column); }
+        ; 
     
 e : e MAS e                         { $$ = new aritmetica.default($1, '+', $3, $1.first_line, $1.last_column, false); }
     | e MENOS e                     { $$ = new aritmetica.default($1, '-', $3, $1.first_line, $1.last_column, false); }
