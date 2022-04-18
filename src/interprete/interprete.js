@@ -83,8 +83,107 @@ performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* actio
 
 var $0 = $$.length - 1;
 switch (yystate) {
-case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8: case 9: case 10: case 11: case 12: case 13: case 14: case 15: case 16: case 17: case 18: case 19: case 20: case 21: case 22: case 23: case 24: case 25: case 26: case 27: case 28: case 29: case 30: case 31: case 32: case 33: case 34: case 35: case 36: case 37: case 38: case 39: case 40: case 41: case 42: case 43: case 44: case 45: case 46: case 47: case 48: case 49: case 50: case 51: case 52: case 53: case 54: case 55: case 56: case 57: case 58: case 59: case 60: case 61: case 62: case 63: case 64:
+case 1:
+ console.log($$[$0-1]); this.$ = new ast.default($$[$0-1]); return this.$; 
+break;
+case 2:
+ this.$ = $$[$0-1]; this.$.push($$[$0]); 
+break;
+case 3:
+ this.$ = new Array(); this.$.push($$[$0]); 
+break;
+case 4: case 5: case 6: case 7: case 8: case 9: case 10: case 11: case 12: case 14: case 20: case 21: case 22: case 23: case 24: case 25: case 26: case 27: case 28: case 29: case 30: case 31: case 32: case 33: case 34: case 35: case 36: case 37: case 62:
  
+break;
+case 13:
+ new errores.default('Lexico', `No se esperaba el caracter ${yytext}`, this._$.first_line, this._$.first_column); 
+break;
+case 15:
+ this.$ = new tipo.default('ENTERO'); 
+break;
+case 16:
+ this.$ = new tipo.default('DOBLE'); 
+break;
+case 17:
+ this.$ = new tipo.default('STRING'); 
+break;
+case 18:
+ this.$ = new tipo.default('CHAR'); 
+break;
+case 19:
+ this.$ = new tipo.default('BOOLEAN'); 
+break;
+case 38:
+ this.$ = new aritmetica.default($$[$0-2], '+', $$[$0], $$[$0-2].first_line, $$[$0-2].last_column, false); 
+break;
+case 39:
+ this.$ = new aritmetica.default($$[$0-2], '-', $$[$0], $$[$0-2].first_line, $$[$0-2].last_column, false); 
+break;
+case 40:
+ this.$ = new aritmetica.default($$[$0-2], '*', $$[$0], $$[$0-2].first_line, $$[$0-2].last_column, false); 
+break;
+case 41:
+ this.$ = new aritmetica.default($$[$0-2], '/', $$[$0], $$[$0-2].first_line, $$[$0-2].last_column, false); 
+break;
+case 42:
+ this.$ = new aritmetica.default($$[$0-2], '^', $$[$0], $$[$0-2].first_line, $$[$0-2].last_column, false); 
+break;
+case 43:
+ this.$ = new aritmetica.default($$[$0-2], '%', $$[$0], $$[$0-2].first_line, $$[$0-2].last_column, false); 
+break;
+case 44:
+ this.$ = new relacional.default($$[$0-2], '==', $$[$0], $$[$0-2].first_line, $$[$0-2].last_column, false); 
+break;
+case 45:
+ this.$ = new relacional.default($$[$0-2], '!=', $$[$0], $$[$0-2].first_line, $$[$0-2].last_column, false); 
+break;
+case 46:
+ this.$ = new relacional.default($$[$0-2], '<=', $$[$0], $$[$0-2].first_line, $$[$0-2].last_column, false); 
+break;
+case 47:
+ this.$ = new relacional.default($$[$0-2], '<', $$[$0], $$[$0-2].first_line, $$[$0-2].last_column, false); 
+break;
+case 48:
+ this.$ = new relacional.default($$[$0-2], '>=', $$[$0], $$[$0-2].first_line, $$[$0-2].last_column, false); 
+break;
+case 49:
+ this.$ = new relacional.default($$[$0-2], '>', $$[$0], $$[$0-2].first_line, $$[$0-2].last_column, false); 
+break;
+case 50:
+ this.$ = new logica.default($$[$0-2], '||', $$[$0], $$[$0-2].first_line, $$[$0-2].last_column, false); 
+break;
+case 51:
+ this.$ = new logica.default($$[$0-2], '&&', $$[$0], $$[$0-2].first_line, $$[$0-2].last_column, false); 
+break;
+case 52:
+ this.$ = new logica.default($$[$0-1], '!', null, $$[$0-1].first_line, $$[$0-1].last_column, true); 
+break;
+case 53:
+ this.$ = $$[$0-1]; 
+break;
+case 54:
+ this.$ = new aritemtica.default($$[$0], 'UNARIO', null, $$[$0-1].first_line, $$[$0-1].last_column, true); 
+break;
+case 55: case 56:
+ this.$ = new primitivo.default(Number(yytext), $$[$0].first_line, $$[$0].last_column); 
+break;
+case 57: case 58:
+ this.$ = new primitivo.default($$[$0].slice(1, $$[$0].length-1), $$[$0].first_line, $$[$0].last_column); 
+break;
+case 59:
+ this.$ = new primitivo.default(true, $$[$0].first_line, $$[$0].last_column); 
+break;
+case 60:
+ this.$ = new primitivo.default(false, $$[$0].first_line, $$[$0].last_column); 
+break;
+case 61:
+ this.$ = new identificador.default($$[$0], $$[$0].first_line, $$[$0].last_column); 
+break;
+case 63:
+ this.$ = new aritmetica.default(new identificador.default($$[$0-1], _$[$0-1].first_line, _$[$0-1].last_column), '+', new primitivo.default(1, $$[$0-1].first_line, $$[$0-1].last_column), $$[$0-1].first_line, $$[$0-1].last_column, false); 
+break;
+case 64:
+ this.$ = new aritmetica.default(new identificador.default($$[$0-1], _$[$0-1].first_line, _$[$0-1].last_column), '-', new primitivo.default(1, $$[$0-1].first_line, $$[$0-1].last_column), $$[$0-1].first_line, $$[$0-1].last_column, false); 
 break;
 }
 },
@@ -338,7 +437,17 @@ _handle_error:
     return true;
 }};
 
+        const primitivo = require('../clases/expresiones/Primitivo.ts');
 
+        const aritmetica = require('../clases/expresiones/operaciones/Aritmetica.ts');
+        const logica = require('../clases/expresiones/operaciones/Logica.ts')
+        const relacional = require('../clases/expresiones/operaciones/Relacional.ts');
+        const identificador = require('../clases/expresiones/Identificador.ts');
+
+        const ast = require('../clases/ast');
+        const errores = require('../clases/ast/Errores.ts');
+
+        const tipo = require('../clases/tablaSimbolos/Tipo.ts');
 /* generated by jison-lex 0.3.4 */
 var lexer = (function(){
 var lexer = ({
@@ -743,89 +852,85 @@ case 36: console.log("Reconocio : " + yy_.yytext); return 19
 break;
 case 37: console.log("Reconocio : " + yy_.yytext); return 20 
 break;
-case 38: console.log("Reconocio : " + yy_.yytext); return 21 
+case 38: console.log("Reconocio : " + yy_.yytext); return 23 
 break;
 case 39: console.log("Reconocio : " + yy_.yytext); return 22 
 break;
-case 40: console.log("Reconocio : " + yy_.yytext); return 23 
+case 40: console.log("Reconocio : " + yy_.yytext); return 21 
 break;
 case 41: console.log("Reconocio : " + yy_.yytext); return 58 
 break;
 case 42: console.log("Reconocio : " + yy_.yytext); return 59 
 break;
-case 43: console.log("Reconocio : " + yy_.yytext); return 'NEW' 
+case 43: console.log("Reconocio : " + yy_.yytext); return 28 
 break;
-case 44: console.log("Reconocio : " + yy_.yytext); return 'LIST' 
+case 44: console.log("Reconocio : " + yy_.yytext); return 33 
 break;
-case 45: console.log("Reconocio : " + yy_.yytext); return 'ADD' 
+case 45: console.log("Reconocio : " + yy_.yytext); return 'SWITCH' 
 break;
-case 46: console.log("Reconocio : " + yy_.yytext); return 'LENGTH' 
+case 46: console.log("Reconocio : " + yy_.yytext); return 'CASE' 
 break;
-case 47: console.log("Reconocio : " + yy_.yytext); return 28 
+case 47: console.log("Reconocio : " + yy_.yytext); return 'DEFAULT' 
 break;
-case 48: console.log("Reconocio : " + yy_.yytext); return 33 
+case 48: console.log("Reconocio : " + yy_.yytext); return 34
 break;
-case 49: console.log("Reconocio : " + yy_.yytext); return 'SWITCH' 
+case 49: console.log("Reconocio : " + yy_.yytext); return 'FOR' 
 break;
-case 50: console.log("Reconocio : " + yy_.yytext); return 'CASE' 
+case 50: console.log("Reconocio : " + yy_.yytext); return 'DO' 
 break;
-case 51: console.log("Reconocio : " + yy_.yytext); return 'DEFAULT' 
+case 51: console.log("Reconocio : "+ yy_.yytext); return 16
 break;
-case 52: console.log("Reconocio : " + yy_.yytext); return 34
+case 52: console.log("Reconocio : " + yy_.yytext); return 'CONTINUE' 
 break;
-case 53: console.log("Reconocio : " + yy_.yytext); return 'FOR' 
+case 53: console.log("Reconocio : " + yy_.yytext); return 'RETURN' 
 break;
-case 54: console.log("Reconocio : " + yy_.yytext); return 'DO' 
+case 54: console.log("Reconocio : " + yy_.yytext); return 35
 break;
-case 55: console.log("Reconocio : "+ yy_.yytext); return 16
+case 55: console.log("Reconocio : " + yy_.yytext); return 'NEW' 
 break;
-case 56: console.log("Reconocio : " + yy_.yytext); return 'CONTINUE' 
+case 56: console.log("Reconocio : " + yy_.yytext); return 38
 break;
-case 57: console.log("Reconocio : " + yy_.yytext); return 'RETURN' 
+case 57: console.log("Reconocio : " + yy_.yytext); return 'PRINTLN'
 break;
-case 58: console.log("Reconocio : " + yy_.yytext); return 35
+case 58: console.log("Reconocio : " + yy_.yytext); return 'TOLOWER' 
 break;
-case 59: console.log("Reconocio : " + yy_.yytext); return 15
+case 59: console.log("Reconocio : " + yy_.yytext); return 'TOUPPER' 
 break;
-case 60: console.log("Reconocio : " + yy_.yytext); return 38
+case 60: console.log("Reconocio : " + yy_.yytext); return 'ROUND' 
 break;
-case 61: console.log("Reconocio : " + yy_.yytext); return 'TOLOWER' 
+case 61: console.log("Reconocio : " + yy_.yytext); return 'LENGTH' 
 break;
-case 62: console.log("Reconocio : " + yy_.yytext); return 'TOUPPER' 
+case 62: console.log("Reconocio : " + yy_.yytext); return 'TYPEOF' 
 break;
-case 63: console.log("Reconocio : " + yy_.yytext); return 'TRUNCATE' 
+case 63: console.log("Reconocio : " + yy_.yytext); return 'TOSTRING' 
 break;
-case 64: console.log("Reconocio : " + yy_.yytext); return 'ROUND' 
+case 64: console.log("Reconocio : " + yy_.yytext); return 'TOCHAR' 
 break;
-case 65: console.log("Reconocio : " + yy_.yytext); return 'TYPEOF' 
+case 65: console.log("Reconocio : " + yy_.yytext); return 'RUN' 
 break;
-case 66: console.log("Reconocio : " + yy_.yytext); return 'TOSTRING' 
+case 66: console.log("Reconocio : " + yy_.yytext); return 55
 break;
-case 67: console.log("Reconocio : " + yy_.yytext); return 'TOCHAR' 
+case 67: console.log("Reconocio : " + yy_.yytext); return 54
 break;
-case 68: console.log("Reconocio : " + yy_.yytext); return 55
+case 68: console.log("Reconocio : " + yy_.yytext); return 25
 break;
-case 69: console.log("Reconocio : " + yy_.yytext); return 54
+case 69: console.log("Reconocio : " + yy_.yytext); return 56
 break;
-case 70: console.log("Reconocio : " + yy_.yytext); return 25
+case 70: console.log("Reconocio : " + yy_.yytext); return 57
 break;
-case 71: console.log("Reconocio : " + yy_.yytext); return 56
+case 71: /* ignora los espacios en blanco */ 
 break;
-case 72: console.log("Reconocio : " + yy_.yytext); return 57
+case 72:return 5
 break;
-case 73: /* ignora los espacios en blanco */ 
-break;
-case 74:return 5
-break;
-case 75: 
+case 73: 
                             console.log("Error Lexico " + yy_.yytext + " linea " + yy_.yylineno + " columna " + (yy_.yylloc.first_column+1));
                             new errores.default('Lexico', 'El caracter ' + yy_.yytext  + ' no forma parte del lenguaje',  yy_.yylineno+1,  yy_.yylloc.last_column+1); 
                         
 break;
 }
 },
-rules: [/^(?:\/\/.*)/i,/^(?:\/\*((\*+[^/*])|([^*]))*\**\*\/)/i,/^(?:\+\+)/i,/^(?:--)/i,/^(?:\+)/i,/^(?:-)/i,/^(?:\*)/i,/^(?:\/)/i,/^(?:\^)/i,/^(?:%)/i,/^(?:\()/i,/^(?:\))/i,/^(?:\[)/i,/^(?:\])/i,/^(?:\{)/i,/^(?:\})/i,/^(?:==)/i,/^(?:!=)/i,/^(?:<=)/i,/^(?:<)/i,/^(?:>=)/i,/^(?:>)/i,/^(?:=)/i,/^(?::)/i,/^(?:;)/i,/^(?:,)/i,/^(?:\.)/i,/^(?:\|\|)/i,/^(?:&&)/i,/^(?:!)/i,/^(?:\?)/i,/^(?:\\n)/i,/^(?:\\)/i,/^(?:\\t)/i,/^(?:\\r)/i,/^(?:\\')/i,/^(?:int\b)/i,/^(?:double\b)/i,/^(?:string\b)/i,/^(?:char\b)/i,/^(?:boolean\b)/i,/^(?:true\b)/i,/^(?:false\b)/i,/^(?:new\b)/i,/^(?:list\b)/i,/^(?:add\b)/i,/^(?:length\b)/i,/^(?:if\b)/i,/^(?:else\b)/i,/^(?:switch\b)/i,/^(?:case\b)/i,/^(?:default\b)/i,/^(?:while\b)/i,/^(?:for\b)/i,/^(?:do\b)/i,/^(?:break\b)/i,/^(?:continue\b)/i,/^(?:return\b)/i,/^(?:void\b)/i,/^(?:ejecutar\b)/i,/^(?:print\b)/i,/^(?:toLower\b)/i,/^(?:toUpper\b)/i,/^(?:truncate\b)/i,/^(?:round\b)/i,/^(?:typeof\b)/i,/^(?:toString\b)/i,/^(?:toCharArray\b)/i,/^(?:[0-9]+(\.[0-9]+)?\b)/i,/^(?:([0-9]+))/i,/^(?:([a-zñA-ZÑ_][a-zñA-ZÑ0-9_]*))/i,/^(?:(("((\\([\'\"\\ntr]))|([^\"\\]+))*")))/i,/^(?:(('((\\([\\ntr]))|([^\'\\]))')))/i,/^(?:[\s\r\n\t])/i,/^(?:$)/i,/^(?:.)/i],
-conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75],"inclusive":true}}
+rules: [/^(?:\/\/.*)/i,/^(?:\/\*((\*+[^/*])|([^*]))*\**\*\/)/i,/^(?:\+\+)/i,/^(?:--)/i,/^(?:\+)/i,/^(?:-)/i,/^(?:\*)/i,/^(?:\/)/i,/^(?:\^)/i,/^(?:%)/i,/^(?:\()/i,/^(?:\))/i,/^(?:\[)/i,/^(?:\])/i,/^(?:\{)/i,/^(?:\})/i,/^(?:==)/i,/^(?:!=)/i,/^(?:<=)/i,/^(?:<)/i,/^(?:>=)/i,/^(?:>)/i,/^(?:=)/i,/^(?::)/i,/^(?:;)/i,/^(?:,)/i,/^(?:\.)/i,/^(?:\|\|)/i,/^(?:&&)/i,/^(?:!)/i,/^(?:\?)/i,/^(?:\\n)/i,/^(?:\\)/i,/^(?:\\t)/i,/^(?:\\r)/i,/^(?:\\')/i,/^(?:int\b)/i,/^(?:double\b)/i,/^(?:boolean\b)/i,/^(?:char\b)/i,/^(?:string\b)/i,/^(?:true\b)/i,/^(?:false\b)/i,/^(?:if\b)/i,/^(?:else\b)/i,/^(?:switch\b)/i,/^(?:case\b)/i,/^(?:default\b)/i,/^(?:while\b)/i,/^(?:for\b)/i,/^(?:do\b)/i,/^(?:break\b)/i,/^(?:continue\b)/i,/^(?:return\b)/i,/^(?:void\b)/i,/^(?:new\b)/i,/^(?:print\b)/i,/^(?:println\b)/i,/^(?:toLower\b)/i,/^(?:toUpper\b)/i,/^(?:round\b)/i,/^(?:length\b)/i,/^(?:typeof\b)/i,/^(?:toString\b)/i,/^(?:toCharArray\b)/i,/^(?:run\b)/i,/^(?:[0-9]+(\.[0-9]+)?\b)/i,/^(?:([0-9]+))/i,/^(?:([a-zñA-ZÑ_][a-zñA-ZÑ0-9_]*))/i,/^(?:(("((\\([\'\"\\ntr]))|([^\"\\]+))*")))/i,/^(?:(('((\\([\\ntr]))|([^\'\\]))')))/i,/^(?:[\s\r\n\t])/i,/^(?:$)/i,/^(?:.)/i],
+conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73],"inclusive":true}}
 });
 return lexer;
 })();
