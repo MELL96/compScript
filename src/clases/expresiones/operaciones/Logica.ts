@@ -107,5 +107,4 @@ export default class Logica extends Operacion implements Expresion {
   recorrer(): Nodo {
     throw new Error("Method not implemented.");
   }
-
 }

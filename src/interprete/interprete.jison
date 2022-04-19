@@ -180,7 +180,11 @@ caracter        (\'({escape2}|{aceptada2})\')
         const asignacion = require('../clases/instrucciones/Asignacion.ts');
         const print = require('../clases/instrucciones/Print.ts');
         const breaks = require('../clases/instrucciones/sentenciaTransferencia/Breaks.ts');
+        const continues = require('../clases/instrucciones/sentenciaTransferencia/Continues.ts');
         const funcion = require('../clases/instrucciones/Funcion.ts');
+
+        const whiles = require('../clases/instrucciones/sentenciaCiclica/While.ts');
+        const ifs = require('../clases/instrucciones/sentenciaControl/Ifs.ts');
 %}
 
 //-------------------------------------------------------------------> PRECEDENCIA DE OPERADORES
@@ -217,7 +221,7 @@ instruccion : declaracion               { $$ = $1; }
             | llamada PYC               { $$ = $1; }
             | RUN llamada PYC           { $$ = new runs.default($2, $1.first_line, $1.last_column); }
             | BREAK PYC                 { $$ = new breaks.default(); }
-            | CONTINUE PYC              { }                      
+            | CONTINUE PYC              { $$ = new continues.default(); }                      
             | error                     { new errores.default('Lexico', `No se esperaba el caracter ${yytext}`, this._$.first_line, this._$.first_column); }
             ;
 
@@ -240,12 +244,12 @@ lista_simbolos  : lista_simbolos COMA ID                    { $$ = $1; $$.push(n
 asignacion  : ID IGUAL e PYC            { $$ = new asignacion.default($1,$3, $1.first_line, $1.last_column); }
             ; 
 
-sent_if : IF PARA e PARC LLAVA instrucciones LLAVC                                          { }
-        | IF PARA e PARC LLAVA instrucciones LLAVC ELSE LLAVA instrucciones LLAVC           { }
-        | IF PARA e PARC LLAVA instrucciones LLAVC ELSE sent_if                             { }
+sent_if : IF PARA e PARC LLAVA instrucciones LLAVC                                          { $$ = new ifs.default($3, $6, [], $1.first_line, $1.last_column ); }
+        | IF PARA e PARC LLAVA instrucciones LLAVC ELSE LLAVA instrucciones LLAVC           { $$ = new ifs.default($3, $6, $10, $1.first_line, $1.last_column); }
+        | IF PARA e PARC LLAVA instrucciones LLAVC ELSE sent_if                             { $$ = new ifs.default($3, $6, [$9], $1.first_line, $1.last_column); }
         ;
  
-sent_while  : WHILE PARA e PARC LLAVA instrucciones LLAVC           { }
+sent_while  : WHILE PARA e PARC LLAVA instrucciones LLAVC           { $$ = new whiles.default($3, $6, $1.first_line, $1.last_column); }
             ; 
 
 funciones   : VOID ID PARA PARC LLAVA instrucciones LLAVC                           { $$ = new funcion.default(3, new tipo.default('VOID'), $2, [], true, $6, $1.first_line, $1.last_column); }

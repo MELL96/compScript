@@ -8,7 +8,6 @@ import Operacion, { Operador } from "./Operaciones";
 
 export default class Aritmetica extends Operacion implements Expresion {
 
-
   public constructor(exp1: Expresion, operador: string, exp2: Expresion, linea: number, columna: number, expU: boolean) {
     super(exp1, operador, exp2, linea, columna, expU);
   }
@@ -313,26 +312,4 @@ export default class Aritmetica extends Operacion implements Expresion {
     let error = new Errores('Semantico', 'BOOLEANO y CHAR no coinciden en +', this.linea, this.columna);
     controlador.errores.push(error);
   }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
