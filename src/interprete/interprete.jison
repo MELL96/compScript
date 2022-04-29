@@ -115,7 +115,7 @@ caracter        (\'({escape2}|{aceptada2})\')
 
 //-----------------------> SENTENCIAS DE TRANSFERENCIA
 
-"break"                 { console.log("Reconocio : " + yytext); return 'BREAK'}
+"break"                 { console.log("Reconocio : "+ yytext); return 'BREAK'}
 "continue"              { console.log("Reconocio : " + yytext); return 'CONTINUE' }
 "return"                { console.log("Reconocio : " + yytext); return 'RETURN' }
 
@@ -163,32 +163,35 @@ caracter        (\'({escape2}|{aceptada2})\')
 //-------------------------------------------------------------------> AREA DE IMPORTS
 
 %{
-    const identificador = require('../Clases/Expresiones/Identificador');
-    const primitivo = require('../Clases/Expresiones/Primitivo');
-    const ternario = require('../Clases/Expresiones/Ternario');
-    const aritmetica = require('../Clases/Expresiones/Operaciones/Aritmetica');
-    const logica = require('../Clases/Expresiones/Operaciones/Logica');
-    const relacional = require('../Clases/Expresiones/Operaciones/Relacional');
+        const identificador = require('../Clases/Expresiones/Identificador');
+        const primitivo = require('../Clases/Expresiones/Primitivo');
+        const ternario = require('../Clases/Expresiones/Ternario');
+        const aritmetica = require('../Clases/Expresiones/Operaciones/Aritmetica');
+        const logica = require('../Clases/Expresiones/Operaciones/Logica');
+        const relacional = require('../Clases/Expresiones/Operaciones/Relacional');
 
-    const ast = require('../Clases/Ast/Ast');
-    const errores = require('../Clases/Ast/Errores');
+        const ast = require('../Clases/Ast/Ast');
+        const errores = require('../Clases/Ast/Errores');
 
-    const tipo = require('../Clases/TablaSimbolos/Tipo');
-    const simbolo = require('../Clases/TablaSimbolos/Simbolos');
+        const tipo = require('../Clases/TablaSimbolos/Tipo');
+        const simbolo = require('../Clases/TablaSimbolos/Simbolos');
 
-    const declaracion = require('../Clases/Instrucciones/Declaracion');
-    const asignacion = require('../Clases/Instrucciones/Asignacion');
-    const print = require('../Clases/Instrucciones/Print');
-    const println = require('../Clases/Instrucciones/Println');
-    const detener = require('../Clases/Instrucciones/SentenciaTransferencia/Break');
-    const continuar = require('../clases/instrucciones/sentenciaTransferencia/Continue.ts');
+        const declaracion = require('../Clases/Instrucciones/Declaracion');
+        const asignacion = require('../Clases/Instrucciones/Asignacion');
+        const print = require('../Clases/Instrucciones/Print');
+        const println = require('../Clases/Instrucciones/Println');
+        const detener = require('../Clases/Instrucciones/SentenciaTransferencia/Break');
+        const continuar = require('../clases/instrucciones/sentenciaTransferencia/Continue.ts');
 
-    const funcion = require('../Clases/Instrucciones/Funcion');
-    const run = require('../Clases/Instrucciones/Runs');
-    const llamada = require('../Clases/Instrucciones/Llamada');
-    
-    const While = require('../Clases/Instrucciones/SentenciaCiclica/While');
-    const Ifs = require('../Clases/Instrucciones/SentenciaControl/Ifs');
+        const funcion = require('../Clases/Instrucciones/Funcion');
+        const run = require('../Clases/Instrucciones/Runs');
+        const llamada = require('../Clases/Instrucciones/Llamada');
+        
+        const While = require('../Clases/Instrucciones/SentenciaCiclica/While');
+        const Ifs = require('../Clases/Instrucciones/SentenciaControl/Ifs');
+
+        const Switch = require('../clases/instrucciones/sentenciaControl/Switch');
+        const caso = require('../clases/instrucciones/sentenciaControl/Caso');
 %}
 
 //-------------------------------------------------------------------> PRECEDENCIA DE OPERADORES
@@ -222,6 +225,7 @@ instruccion : declaracion               { $$ = $1; }
             | sent_if                   { $$ = $1; }
             | sent_while                { $$ = $1; }
             | sent_for                  { $$ = $1; }
+            | sent_switch               { $$ = $1; }
             | funciones                 { $$ = $1; }
             | llamada PYC               { $$ = $1; }
             | RUN llamada PYC           { $$ = new run.default($2, @1.first_line, @1.last_column); }
@@ -261,8 +265,19 @@ sent_if : IF PARA e PARC LLAVA instrucciones LLAVC                              
 sent_while  : WHILE PARA e PARC LLAVA instrucciones LLAVC           { $$ = new While.default($3, $6, @1.first_line, @1.last_column); }
             ; 
 
-sent_for: FOR PARA tipo ID IGUAL e PYC e PYC ID IGUAL e PARC LLAVA instrucciones  LLAVC                 { }
-        | FOR PARA ID IGUAL e PYC e PYC ID IGUAL e PARC LLAVA instrucciones LLAVC                       { }
+sent_switch : SWITCH PARA e PARC LLAVA caselist LLAVC           { $$ = new Switch.default($3, $6, null, @1.first_line, @1.last_column); }
+            | SWITCH PARA e PARC LLAVA caselist default LLAVC   { $$ = new Switch.default($3, $6, $7, @1.first_line, @1.last_column); }
+            | SWITCH PARA e PARC LLAVA default LLAVC            { $$ = new Switch.default($3, [], $6, @1.first_line, @1.last_column); }
+            ;
+
+caselist : caselist caso         { $$ = $1; $$.push($2); }
+        | caso                   { $$ = new Array(); $$.push($1); }
+        ;
+
+caso : CASE e DSPNTS instrucciones  { $$ = new caso.default($2, $4, @1.first_line, @1.last_column); }
+    ;
+
+default : DEFAULT DSPNTS instrucciones { $$ = new caso.default(null, $3, @1.first_line, @1.last_column);}
         ;
 
 funciones   : VOID ID PARA PARC LLAVA instrucciones LLAVC                                       { $$ = new funcion.default(3, new tipo.default('VOID'), $2, [], true, $6, @1.first_line, @1.last_column ); }

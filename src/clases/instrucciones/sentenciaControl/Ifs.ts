@@ -29,16 +29,6 @@ export default class Ifs implements Instruccion {
   }
 
   ejecutar(controlador: Controlador, ts: TablaSimbolos) {
-    /**
-     * int x = 20;
-     *  if(true){
-     *     int a = 8;
-     *      print(a);
-     * }else{
-     *       x = 30;
-     * }
-     * print(x); // 20
-     */
     let ts_local = new TablaSimbolos(ts);
     let valor_condicion = this.condicion.getValor(controlador, ts); //true | false
 
@@ -74,9 +64,6 @@ export default class Ifs implements Instruccion {
           }
         }
       } else {
-        /**
-         * if () {} else if(){} else { }
-         */
         for (let inst of this.lista_instrucciones_elses) {
           let ret = inst.ejecutar(controlador, ts_local);
           if (ret instanceof Break) {

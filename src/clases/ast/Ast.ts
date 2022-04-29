@@ -23,7 +23,7 @@ export default class Ast implements Instruccion {
     for (let instruccion of this.lista_instrucciones) {
       if (instruccion instanceof Funcion) {
         let funcion = instruccion as Funcion;
-        funcion.agregarSimboloFuncion(controlador, ts);
+        funcion.agregarFuncionTS(ts);
       }
     }
 
