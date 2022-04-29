@@ -1,24 +1,59 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
-import { AppComponent } from './app.component';
+import { Component, PLATFORM_INITIALIZER } from '@angular/core';
+import * as analizador from '../Clases/Analizar';
+import { saveAs } from 'file-saver'
 
-describe('AppComponent', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        AppComponent
-      ],
-    }).compileComponents();
-  }));
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app).toBeTruthy();
-  });
+export class AppComponent {
 
-  it(`should have as title 'mdb-angular-free'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('mdb-angular-free');
-  });
-});
+  title = '.typesty';
+  tabsim = true
+  taberr = true
+  declare require : any;
+  entrada: string = '';
+  consola: string = "";
+
+  recorrer(): void {
+    let ana = new analizador.Analizador();
+
+    if (this.entrada != "") {
+      let nodo_ast = ana.recorrer(this.entrada);
+      let grafo = nodo_ast.GraficarSintactico();  //Aqui tenemos la cadena de graphviz para graficar
+    }
+  }
+
+  ejecutar(): void {
+    let ana = new analizador.Analizador();
+    this.consola = "";
+
+    if (this.entrada != "") {
+      let ejecutar = ana.ejecutar(this.entrada);
+
+      this.consola = ejecutar.consola;
+      document.getElementById("tablaS").innerHTML = ejecutar.ts;      
+    }
+  }
+
+  mostrarGuardar(){    
+    let display = document.getElementById('hideSection').style.display = 'block';
+  }
+
+  guardarArchivo() {    
+    var inputValue = (<HTMLInputElement>document.getElementById('namets')).value;
+    var FileSaver = require('file-saver')
+    var blob = new Blob([this.entrada],{type: "text/plain;charset=utf-8"});
+    FileSaver.saveAs(blob, `${inputValue}.ty`);   
+    document.getElementById('hideSection').style.display = 'none';
+  }
+
+
+  mostrarTabla(){
+    this.taberr = true;
+    this.tabsim = false;
+  }
+
+}

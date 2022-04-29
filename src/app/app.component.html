@@ -1,22 +1,20 @@
-<header class="container">
-  <h2 class="logo" id="head">&lt;compScript /&gt;</h2>
+<header>
+  <h4 class="logo" id="head">compScript</h4>
   <nav>
     <ul class="nav-area">
-      <li><a href="#">guardar()</a></li>
+      <li><a href="#" (click)="mostrarGuardar()">guardar()</a></li>
       <li><a href="#">ast()</a></li>
-      <li><a href="#newTable">tablaSimbolos()</a></li>
-      <li><a href="#areaCodigo">compilar() </a></li>
+      <li><a href="#newTable" (click)="mostrarTabla()">tabla_simbolos()</a></li>
+      <li><a href="#" (click)="ejecutar()">compilar() </a></li>
     </ul>
   </nav>
 </header>
-
 <section id ="hideSection" class="hide saveFile row" style="display: none;">
   <label for="fileName">Nombre: </label>
   <input type="text" id="namets" class="saveFile" name="fileName" placeholder="Ingresa el nombre del archivo">
-  <button type="submit" id="but">Guardar</button>
+  <button type="submit" id="but" (click)="guardarArchivo()">Guardar</button>
 </section>
-
-<section id="areaCodigo" class="view container">
+<section id="areaCodigo" class="view">
   <!-- <div class="row"> -->
     <div class="colu">
       <h3 id="entra">Input</h3>
@@ -27,6 +25,7 @@
         scrollbarStyle: null
       }"></ngx-codemirror>
     </div>
+    
     <div class="colu">
       <h3 id="sale">Output</h3>
       <ngx-codemirror class="codeMirror" [(ngModel)]="consola" [options]="{

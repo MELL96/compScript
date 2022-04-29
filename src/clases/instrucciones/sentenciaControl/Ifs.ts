@@ -1,56 +1,104 @@
-import Nodo from "src/Clases/Ast/Nodo";
-import Controlador from "src/Clases/Controlador";
-import { Expresion } from "src/Clases/Interfaces/Expresion";
-import { Instruccion } from "src/Clases/Interfaces/Instruccion";
-import { TablaSimbolos } from "src/Clases/TablaSimbolos/TablaSimbolos";
-import { tipo } from "src/Clases/TablaSimbolos/Tipo";
-import Detener from "../SentenciaTransferencia/Breaks";
+import Errores from "../../ast/Errores";
+import Nodo from "../../ast/Nodo";
+import Controlador from "../../Controlador";
+import { Expresion } from "../../Interfaces/Expresion";
+import { Instruccion } from "../../Interfaces/Instruccion";
+import { TablaSimbolos } from "../../TablaSimbolos/TablaSimbolos";
+import { tipo } from "../../TablaSimbolos/Tipo";
+import Break from "../sentenciaTransferencia/Break";
+import Continue from "../sentenciaTransferencia/Continue";
+import Retorno from "../sentenciaTransferencia/Return";
 
 export default class Ifs implements Instruccion {
 
   public condicion: Expresion;
-  public lista_ifs: Array<Instruccion>;
-  public lista_elses: Array<Instruccion>;
+  public lista_instrucciones_ifs: Array<Instruccion>;
+  public lista_instrucciones_elses: Array<Instruccion>;
   public linea: number;
   public columna: number;
 
-  constructor(condicion, lista_ifs, lista_elses, linea, columna) {
+  /**
+   *
+   */
+  constructor(condicion: Expresion, lista_instrucciones_ifs: Array<Instruccion>, lista_instrucciones_elses: Array<Instruccion>, linea: number, columna: number) {
     this.condicion = condicion;
-    this.lista_ifs = lista_ifs;
-    this.lista_elses = lista_elses;
+    this.lista_instrucciones_ifs = lista_instrucciones_ifs;
+    this.lista_instrucciones_elses = lista_instrucciones_elses;
     this.columna = columna;
     this.linea = linea;
   }
 
   ejecutar(controlador: Controlador, ts: TablaSimbolos) {
+    /**
+     * int x = 20;
+     *  if(true){
+     *     int a = 8;
+     *      print(a);
+     * }else{
+     *       x = 30;
+     * }
+     * print(x); // 20
+     */
     let ts_local = new TablaSimbolos(ts);
-    let valor_condicion = this.condicion.getValor(controlador, ts);
+    let valor_condicion = this.condicion.getValor(controlador, ts); //true | false
 
     if (this.condicion.getTipo(controlador, ts) == tipo.BOOLEANO) {
       if (valor_condicion) {
-        for (let ins of this.lista_ifs) {
-          let res = ins.ejecutar(controlador, ts_local);
+        for (let inst of this.lista_instrucciones_ifs) {
+          let ret = inst.ejecutar(controlador, ts_local);
+          if (ret instanceof Break) {
+            if (controlador.sent_ciclica) {
+              return ret;
+            } else {
+              let error = new Errores("Semantico", `No se puede ejecutar la sentencia de transferencia Break dentro de la sentencia de control if.`, this.linea, this.columna);
+              controlador.errores.push(error);
+              controlador.append(` *** ERROR: Semantico, No se puede ejecutar la sentencia de transferencia Break dentro de la sentencia de control if. En la linea ${this.linea} y columna ${this.columna}`)
+            }
+          }
+          if (ret instanceof Continue) {
+            if (controlador.sent_ciclica) {
+              return ret;
+            } else {
+              let error = new Errores("Semantico", `No se puede ejecutar la sentencia de transferencia Continue dentro de la sentencia de control if.`, this.linea, this.columna);
+              controlador.errores.push(error);
+              controlador.append(` *** ERROR: Semantico, No se puede ejecutar la sentencia de transferencia Continue dentro de la sentencia de control if. En la linea ${this.linea} y columna ${this.columna}`)
+            }
+          }
 
-          if (ins instanceof Detener || res instanceof Detener) {
-            return res;
+          if (ret instanceof Retorno) {
+            return ret;
+          }
+
+          if (ret != null) {
+            return ret;
           }
         }
-      }
-      else {
-        for (let ins of this.lista_elses) {
-          let res = ins.ejecutar(controlador, ts_local);
+      } else {
+        /**
+         * if () {} else if(){} else { }
+         */
+        for (let inst of this.lista_instrucciones_elses) {
+          let ret = inst.ejecutar(controlador, ts_local);
+          if (ret instanceof Break) {
+            if (controlador.sent_ciclica) {
+              return ret;
+            } else {
+              //error semantico, no se puede tener un break dentro de un else 
+            }
+          }
+          if (ret instanceof Retorno) {
+            return ret;
+          }
 
-          if (ins instanceof Detener || res instanceof Detener) {
-            return res;
+          if (ret != null) {
+            return ret;
           }
         }
       }
     }
     return null;
-
   }
   recorrer(): Nodo {
     throw new Error("Method not implemented.");
   }
-
 }

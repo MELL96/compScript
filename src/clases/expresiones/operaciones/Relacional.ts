@@ -61,24 +61,26 @@ export default class Relacional extends Operacion implements Expresion {
           }
           else {
             //ERROR AL COMOPARAR TIPOS DE DATOS DISTINTOS
-            this.reportarError(Controlador, '||', 'BOOL', 'STRING/CHAR/NUMBER', this.linea, this.columna);
+            this.reportarError(Controlador, '==', 'BOOL', 'STRING/CHAR/NUMBER', this.linea, this.columna);
           }
         }
         else if (typeof valor_exp1 === 'string') {
-          if (typeof valor_exp2 === 'string') {
-            if (valor_exp1.length == 1 && valor_exp2.length == 1) {
-              return valor_exp1 == valor_exp2;
+          if(valor_exp1.length === 1){
+            if(typeof valor_exp2 === 'string' && valor_exp2.length === 1){
+              return valor_exp1 === valor_exp2;
+            } else if(typeof valor_exp2 === 'number'){
+              return valor_exp1.charCodeAt(0) === valor_exp2;
+            } else {
+              this.reportarError(Controlador, '==', 'CHAR', 'STRING', this.linea, this.columna);
             }
-            else {
-              //ERROR AL COMPARAR TIPOS DE DATOS DISTINTOS
-              this.reportarError(Controlador, '==', 'STRING', 'STRING', this.linea, this.columna);
+          } else {
+            if (typeof valor_exp2 === 'string' && valor_exp2.length !== 1) {
+                return valor_exp1 === valor_exp2;
+            } else {
+              this.reportarError(Controlador, '==', 'STRING', 'CHAR', this.linea, this.columna);
             }
-
           }
-          else {
-            //ERROR AL COMPARAR TIPOS DE DATOS DISTINTOS
-            this.reportarError(Controlador, '==', 'STRING', 'NUMBER/CHAR', this.linea, this.columna);
-          }
+          // COMENTARIO
         }
         else if (typeof valor_exp1 === 'boolean') {
           if (typeof valor_exp2 === 'boolean') {
@@ -86,7 +88,7 @@ export default class Relacional extends Operacion implements Expresion {
           }
           else {
             //ERROR AL COMPARAR TIPOS DE DATOS DISTINTOS
-            this.reportarError(Controlador, '==', 'BOOL', 'STING/NUMBER', this.linea, this.columna);
+            this.reportarError(Controlador, '==', 'BOOL', 'STING/CHAR/NUMBER', this.linea, this.columna);
           }
         }
         break;
@@ -110,18 +112,20 @@ export default class Relacional extends Operacion implements Expresion {
           }
         }
         else if (typeof valor_exp1 === 'string') {
-          if (typeof valor_exp2 === 'string') {
-            if (valor_exp1.length == 1 && valor_exp2.length == 1) {
-              return valor_exp1 != valor_exp2;
+          if(valor_exp1.length === 1){
+            if(typeof valor_exp2 === 'string' && valor_exp2.length === 1){
+              return valor_exp1 !== valor_exp2;
+            } else if(typeof valor_exp2 === 'number'){
+              return valor_exp1.charCodeAt(0) !== valor_exp2;
+            } else {
+              this.reportarError(Controlador, '!=', 'CHAR', 'STRING', this.linea, this.columna);
             }
-            else {
-              //ERROR AL COMPARAR TIPOS DE DATOS DISTINTOS
-              this.reportarError(Controlador, '!=', 'CHAR', 'STRING/NUMBER', this.linea, this.columna);
+          } else {
+            if (typeof valor_exp2 === 'string' && valor_exp2.length !== 1) {
+                return valor_exp1 !== valor_exp2;
+            } else {
+              this.reportarError(Controlador, '!=', 'STRING', 'CHAR', this.linea, this.columna);
             }
-          }
-          else {
-            //ERROR AL COMPARAR TIPOS DE DATOS DISTINTOS
-            this.reportarError(Controlador, '!=', 'STRING', 'STRING/NUMBER/BOOL', this.linea, this.columna);
           }
         }
         else if (typeof valor_exp1 === 'boolean') {
@@ -279,7 +283,7 @@ export default class Relacional extends Operacion implements Expresion {
   }
 
   reportarError(controlador: Controlador, signo: string, desc1: string, desc2: string, linea: number, columna: number) {
-    controlador.append(`Relacionals.ts - Error Semantico: variable *${desc1}* y *${desc2}* no coinciden en *${signo}*.`);
+    controlador.append(`Relacionals.ts - Error Semantico: variable *${desc1}* y *${desc2}* no coinciden en *${signo}*.`, "\n");
     let error = new Errores('Semantico', `${desc1} y ${desc2} no coinciden en ${signo}`, this.linea, this.columna);
     controlador.errores.push(error);
   }
@@ -289,3 +293,35 @@ export default class Relacional extends Operacion implements Expresion {
   }
 
 }
+
+/**
+if (typeof valor_exp2 === 'string') {
+if (valor_exp1.length == 1 && valor_exp2.length == 1) {
+return valor_exp1 == valor_exp2;
+}
+else {
+//ERROR AL COMPARAR TIPOS DE DATOS DISTINTOS
+this.reportarError(Controlador, '==', 'STRING', 'STRING', this.linea, this.columna);
+}
+
+}
+else {
+//ERROR AL COMPARAR TIPOS DE DATOS DISTINTOS
+this.reportarError(Controlador, '==', 'STRING', 'NUMBER/CHAR', this.linea, this.columna);
+}
+*/
+
+
+// if (typeof valor_exp2 === 'string') {
+//   if (valor_exp1.length == 1 && valor_exp2.length == 1) {
+//     return valor_exp1 != valor_exp2;
+//   }
+//   else {
+//     //ERROR AL COMPARAR TIPOS DE DATOS DISTINTOS
+//     this.reportarError(Controlador, '!=', 'CHAR', 'STRING/NUMBER', this.linea, this.columna);
+//   }
+// }
+// else {
+//   //ERROR AL COMPARAR TIPOS DE DATOS DISTINTOS
+//   this.reportarError(Controlador, '!=', 'STRING', 'STRING/NUMBER/BOOL', this.linea, this.columna);
+// }

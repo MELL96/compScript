@@ -19,20 +19,20 @@ export default class Print implements Instruccion {
 
     ejecutar(controlador: Controlador, ts: TablaSimbolos) {
         let valor = this.expresion.getValor(controlador, ts);
-        if (typeof valor === 'string' || typeof valor === 'number' || typeof valor === 'boolean') {
-            controlador.append(valor.toString());
+        if(typeof valor === 'string' || typeof valor === 'number' || typeof valor === 'boolean'){
+            controlador.append(valor.toString(), '\n');
             return null;
         }
-        else {
-            controlador.append(`Print.ts - Error Lexico: No es de tipo primitivo. L: ${this.linea}, C: ${this.columna}`);
+        else{
+            controlador.append(`Println.ts - Error Lexico: No es de tipo primitivo. L: ${this.linea}, C: ${this.columna}` )
             let error = new Errores('Semantico', `No es de tipo primitivo.`, this.linea, this.columna);
             controlador.errores.push(error);
         }
     }
 
     recorrer(): Nodo {
-        let padre = new Nodo("Print", "");
-        padre.AddHijo(new Nodo("print", ""));
+        let padre = new Nodo("Println", "");
+        padre.AddHijo(new Nodo("println", ""));
         padre.AddHijo(new Nodo("(", ""));
         let hijo = new Nodo("exp", "");
         hijo.AddHijo(this.expresion.recorrer());
@@ -40,4 +40,5 @@ export default class Print implements Instruccion {
         padre.AddHijo(new Nodo(")", ""));
         return padre;
     }
+
 }

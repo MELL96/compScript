@@ -28,7 +28,7 @@ export default class Declaracion implements Instruccion {
       if (ts.existeEnActual(variable.identificador)) {
         let error = new Errores('Semantico', `Variable ${variable.identificador} existente.`, this.linea, this.columna);
         controlador.errores.push(error);
-        controlador.append(`Declaracion.ts - Error Semantico: variable *${variable.identificador}* existente. L: ${this.linea}, C: ${this.columna}`);
+        controlador.append(`Declaracion.ts - Error Semantico: variable *${variable.identificador}* existente. L: ${this.linea}, C: ${this.columna}`, "\n");
         continue;
       }
 
@@ -36,14 +36,14 @@ export default class Declaracion implements Instruccion {
         let valor = variable.valor.getValor(controlador, ts);
         let tipo_valor = variable.valor.getTipo(controlador, ts);
 
-        if (tipo_valor == this.type.type || (tipo_valor == tipo.DOBLE && this.type.type == tipo.ENTERO)) {
+        if (tipo_valor == this.type.type || (tipo_valor == tipo.DOBLE && this.type.type == tipo.ENTERO || tipo.CHAR && this.type.type == tipo.CHAR)) {
           let nuevo_simb = new Simbolos(variable.simbolo, this.type, variable.identificador, valor);
           ts.agregar(variable.identificador, nuevo_simb);
         }
         else {
           let error = new Errores('Semantico', `Variable ${variable.identificador} no es del mismo tipo`, this.linea, this.columna);
           controlador.errores.push(error);
-          controlador.append(`Declaracion.ts - Error Semantico: variable *${variable.identificador}* no es del mismo tipo. L: ${this.linea}, C: ${this.columna}`);
+          controlador.append(`Declaracion.ts - Error Semantico: variable *${variable.identificador}* no es del mismo tipo. L: ${this.linea}, C: ${this.columna}`, "\n");
           continue;
         }
 

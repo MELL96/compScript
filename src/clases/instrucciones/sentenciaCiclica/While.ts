@@ -3,7 +3,9 @@ import Controlador from "src/Clases/Controlador";
 import { Expresion } from "src/Clases/Interfaces/Expresion";
 import { Instruccion } from "src/Clases/Interfaces/Instruccion";
 import { TablaSimbolos } from "src/Clases/TablaSimbolos/TablaSimbolos";
-import Breaks from "../SentenciaTransferencia/Breaks";
+import { tipo } from "src/clases/TablaSimbolos/Tipo";
+import Break from "../SentenciaTransferencia/Break";
+import Continue from "../sentenciaTransferencia/Continue";
 
 export default class While implements Instruccion {
 
@@ -20,23 +22,33 @@ export default class While implements Instruccion {
   }
 
   ejecutar(controlador: Controlador, ts: TablaSimbolos) {
-    let valor_condicion = this.condicion.getValor(controlador, ts);
+    let temp = controlador.sent_ciclica;
+    controlador.sent_ciclica = true;
 
-    if (typeof valor_condicion == 'boolean') {
+    if (this.condicion.getTipo(controlador, ts) == tipo.BOOLEANO) {
+      siguiente:
       while (this.condicion.getValor(controlador, ts)) {
         let ts_local = new TablaSimbolos(ts);
-
-        for (let ins of this.lista_instrucciones) {
-          let res = ins.ejecutar(controlador, ts_local);
-
-          if (ins instanceof Breaks || res instanceof Breaks) {
-            return res;
+        for (let inst of this.lista_instrucciones) {
+          let ret = inst.ejecutar(controlador, ts_local);
+          if (ret instanceof Break) {
+            controlador.sent_ciclica = temp;
+            return ret;
+          }
+          if (ret instanceof Continue) {
+            continue siguiente;
           }
         }
       }
-    }
-  }
+    } else {
+      //reportamos error semantico de que la condicion no es booleana\
 
+    }
+
+
+    controlador.sent_ciclica = temp;
+    return null;
+  }
   recorrer(): Nodo {
     throw new Error("Method not implemented.");
   }

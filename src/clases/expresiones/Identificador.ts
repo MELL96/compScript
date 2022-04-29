@@ -35,7 +35,7 @@ export default class Identificador implements Expresion {
     else {
       let error = new Errores('Semantico', `No existe la variable ${this.identificador} en la tabla de simbolos.`, this.linea, this.columna);
       controlador.errores.push(error);
-      controlador.append(`Identificador.ts - Error Semantico: Variable no declarada. L: ${this.linea}, C: ${this.columna}`);
+      controlador.append(`Identificador.ts - Error Semantico: Variable no declarada. L: ${this.linea}, C: ${this.columna}`, "\n");
       return null;
     }
   }

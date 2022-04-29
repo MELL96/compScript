@@ -4,9 +4,9 @@ import Controlador from "src/Clases/Controlador";
 import { Expresion } from "src/Clases/Interfaces/Expresion";
 import { TablaSimbolos } from "src/Clases/TablaSimbolos/TablaSimbolos";
 import { tipo } from "src/Clases/TablaSimbolos/Tipo";
-import Operacion, { Operador } from "./Operaciones";
+import Operaciones, { Operador } from "./Operaciones";
 
-export default class Aritmetica extends Operacion implements Expresion {
+export default class Aritmetica extends Operaciones implements Expresion {
 
   public constructor(exp1: Expresion, operador: string, exp2: Expresion, linea: number, columna: number, expU: boolean) {
     super(exp1, operador, exp2, linea, columna, expU);
@@ -40,6 +40,7 @@ export default class Aritmetica extends Operacion implements Expresion {
     }
 
     switch (this.operador) {
+      
       case Operador.SUMA:
         if (typeof valor_exp1 === 'number') {
           if (typeof valor_exp2 === 'number') {
@@ -101,18 +102,20 @@ export default class Aritmetica extends Operacion implements Expresion {
           }
         }
         break;
+
       case Operador.UNARIO:
         if (typeof valor_expU == 'number') {
           return -valor_expU;
         }
         else {
           //ERROR AL VOLVER UNARIO UN TIPO DISTINTO A NUMERO
-          controlador.append(`Aritmetica.ts - Error Semantico: Tipo de dato debe de ser *NUMBER*.`);
+          controlador.append(`Aritmetica.ts - Error Semantico: Tipo de dato debe de ser *NUMBER*. L: ${this.linea}, C: ${this.columna}`, "\n");
           let error = new Errores('Semantico', 'BOOLEANO y CHAR no coinciden en +', this.linea, this.columna);
           controlador.errores.push(error);
         }
         break;
-      case Operador.RESTA:
+      
+        case Operador.RESTA:
         if (typeof valor_exp1 === 'number') {
           if (typeof valor_exp2 === 'number') {
             return valor_exp1 - valor_exp2;
@@ -148,11 +151,12 @@ export default class Aritmetica extends Operacion implements Expresion {
           }
           else if (typeof valor_exp2 === 'string') {
             //ERROR AL RESTAR BOOLEAN CON STRING
-            this.reportarError(controlador, '-', 'BOOL', 'STRING', this.linea, this.columna);
+            this.reportarError(controlador, '-', 'BOOL', 'STRING/CHAR', this.linea, this.columna);
           }
         }
         break;
-      case Operador.MULTI:
+      
+        case Operador.MULTI:
         if (typeof valor_exp1 === 'number') {
           if (typeof valor_exp2 === 'number') {
             return valor_exp1 * valor_exp2;
@@ -173,8 +177,8 @@ export default class Aritmetica extends Operacion implements Expresion {
         }
         else if (typeof valor_exp1 === 'boolean') {
           //ERROR AL TENER AL INICIO UN BOOLEANO
-          controlador.append(`Aritmetica.ts - Error Semantico: No se puede hacer la operacion *x* con tipo de dato inicial *BOOL*.`);
-          let error = new Errores('Semantico', 'No se puede hacer la oparación *x* con tipo de dato inicial *BOOL*', this.linea, this.columna);
+          controlador.append(`Aritmetica.ts - Error Semantico: No se puede hacer la operacion * con tipo de dato inicial *BOOL*.`, "\n");
+          let error = new Errores('Semantico', 'No se puede hacer la oparación * con tipo de dato inicial *BOOL*', this.linea, this.columna);
           controlador.errores.push(error);
         }
         else if (typeof valor_exp1 === 'string') {
@@ -193,12 +197,13 @@ export default class Aritmetica extends Operacion implements Expresion {
           }
           else {
             //ERROR AL TENER DE INICIO UNA CADENA
-            controlador.append(`Aritmetica.ts - Error Semantico: No se puede hacer la operacion *x* con tipo de dato inicial *STRING*.`);
-            let error = new Errores('Semantico', 'No se puede hacer la oparación *x* con tipo de dato inicial *STRING*', this.linea, this.columna);
+            controlador.append(`Aritmetica.ts - Error Semantico: No se puede hacer la operacion * con tipo de dato inicial *STRING*.`, "\n");
+            let error = new Errores('Semantico', 'No se puede hacer la oparación * con tipo de dato inicial *STRING*', this.linea, this.columna);
             controlador.errores.push(error);
           }
         }
         break;
+      
       case Operador.DIV:
         if (typeof valor_exp1 === 'number') {
           if (typeof valor_exp2 === 'number') {
@@ -220,8 +225,8 @@ export default class Aritmetica extends Operacion implements Expresion {
         }
         else if (typeof valor_exp1 === 'boolean') {
           //ERROR AL TENER DE PRIMERO UN BOOLEANO
-          controlador.append(`Aritmetica.ts - Error Semantico: No se puede hacer la operacion */* con tipo de dato inicial *BOOL*.`);
-          let error = new Errores('Semantico', 'No se puede hacer la oparación */* con tipo de dato inicial *BOOL*', this.linea, this.columna);
+          controlador.append(`Aritmetica.ts - Error Semantico: No se puede hacer la operacion / con tipo de dato inicial *BOOL*.`, "\n");
+          let error = new Errores('Semantico', 'No se puede hacer la oparación / con tipo de dato inicial *BOOL*', this.linea, this.columna);
           controlador.errores.push(error);
         }
         else if (typeof valor_exp1 === 'string') {
@@ -240,12 +245,13 @@ export default class Aritmetica extends Operacion implements Expresion {
           }
           else {
             //ERROR AL TENER DE PRIMERO A UNA CADENA EN UNA DIVISION
-            controlador.append(`Aritmetica.ts - Error Semantico: No se puede hacer la operacion */* con tipo de dato inicial *STRING*.`);
-            let error = new Errores('Semantico', 'No se puede hacer la oparación */* con tipo de dato inicial *STRING*', this.linea, this.columna);
+            controlador.append(`Aritmetica.ts - Error Semantico: No se puede hacer la operacion / con tipo de dato inicial *STRING*.`, "\n");
+            let error = new Errores('Semantico', 'No se puede hacer la oparación / con tipo de dato inicial *STRING*', this.linea, this.columna);
             controlador.errores.push(error);
           }
         }
         break;
+      
       case Operador.POTEN:
         if (typeof valor_exp1 === 'number') {
           if (typeof valor_exp2 === 'number') {
@@ -253,18 +259,19 @@ export default class Aritmetica extends Operacion implements Expresion {
           }
           else {
             //ERROR NO SE PUEDE COMBINAR NUMERO CON OTRO TIPO DE DATO
-            controlador.append(`Aritmetica.ts - Error Semantico: No se puede hacer la operacion *^* con datos distintos de *NUMBER*.`);
-            let error = new Errores('Semantico', 'No se puede hacer la oparación *^* con datos distintos de *NUMBER*', this.linea, this.columna);
+            controlador.append(`Aritmetica.ts - Error Semantico: No se puede hacer la operacion ^ con datos distintos de *NUMBER*.`, "\n");
+            let error = new Errores('Semantico', 'No se puede hacer la oparación ^ con datos distintos de *NUMBER*', this.linea, this.columna);
             controlador.errores.push(error);
           }
         }
         else {
           //ERROR NO SE PUEDE USAR POW SI NO ES NUMERO
-          controlador.append(`Aritmetica.ts - Error Semantico: No se puede hacer la operacion *^* con datos distintos de *NUMBER*.`);
-          let error = new Errores('Semantico', 'No se puede hacer la oparación *^* con datos distintos de *NUMBER*', this.linea, this.columna);
+          controlador.append(`Aritmetica.ts - Error Semantico: No se puede hacer la operacion ^ con datos distintos de *NUMBER*.`, "\n");
+          let error = new Errores('Semantico', 'No se puede hacer la oparación ^ con datos distintos de *NUMBER*', this.linea, this.columna);
           controlador.errores.push(error);
         }
         break;
+      
       case Operador.MODULO:
         if (typeof valor_exp1 === 'number') {
           if (typeof valor_exp2 === 'number') {
@@ -272,20 +279,21 @@ export default class Aritmetica extends Operacion implements Expresion {
           }
           else {
             //ERROR NO SE PUEDE COMBINAR NUMERO CON OTRO TIPO DE DATO
-            controlador.append(`Aritmetica.ts - Error Semantico: No se puede hacer la operacion *%* con datos distintos de *NUMBER*.`);
-            let error = new Errores('Semantico', 'No se puede hacer la oparación *%* con datos distintos de *NUMBER*', this.linea, this.columna);
+            controlador.append(`Aritmetica.ts - Error Semantico: No se puede hacer la operacion % con datos distintos de *NUMBER*.`, "\n");
+            let error = new Errores('Semantico', 'No se puede hacer la oparación % con datos distintos de *NUMBER*', this.linea, this.columna);
             controlador.errores.push(error);
           }
         }
         else {
           //ERROR NO SE PUEDE USAR POW SI NO ES NUMERO
-          controlador.append(`Aritmetica.ts - Error Semantico: No se puede hacer la operacion *%* con datos distintos de *NUMBER*.`);
-          let error = new Errores('Semantico', 'No se puede hacer la oparación *%* con datos distintos de *NUMBER*', this.linea, this.columna);
+          controlador.append(`Aritmetica.ts - Error Semantico: No se puede hacer la operacion % con datos distintos de *NUMBER*.`, "\n");
+          let error = new Errores('Semantico', 'No se puede hacer la oparación % con datos distintos de *NUMBER*', this.linea, this.columna);
           controlador.errores.push(error);
         }
         break;
+      
       default:
-        controlador.append(`Aritmetica.ts - Error Semantico {default}.`);
+        controlador.append(`Aritmetica.ts - Error Semantico {default}.`, "\n");
         let error = new Errores('Semantico', `Error Semantico {default - Aritmetica}`, this.linea, this.columna);
         controlador.errores.push(error);
         break;
@@ -308,7 +316,7 @@ export default class Aritmetica extends Operacion implements Expresion {
   }
 
   reportarError(controlador: Controlador, signo: string, desc1: string, desc2: string, linea: number, columna: number) {
-    controlador.append(`Aritmetica.ts - Error Semantico: variable *${desc1}* y *${desc2}* no coinciden en *${signo}*.`);
+    controlador.append(`Aritmetica.ts - Error semantico: dato *${desc1}* y *${desc2}* no coinciden en *${signo}*. L:${linea}, C: ${columna}` , "\n");
     let error = new Errores('Semantico', 'BOOLEANO y CHAR no coinciden en +', this.linea, this.columna);
     controlador.errores.push(error);
   }

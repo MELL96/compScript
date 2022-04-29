@@ -3,7 +3,6 @@ import Controlador from "src/Clases/Controlador";
 import { Instruccion } from "src/Clases/Interfaces/Instruccion";
 import { TablaSimbolos } from "src/Clases/TablaSimbolos/TablaSimbolos";
 
-
 export default class Breaks implements Instruccion {
 
     constructor() { }
